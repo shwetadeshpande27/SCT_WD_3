@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<!-- saved from url=(0094)file:///C:/Users/shwet/AppData/Local/Microsoft/Windows/INetCache/IE/VNKQ6SUE/index_(1)[1].html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tic Tac Toe</title>
+<style>
+  :root {
+    --color-bg: #121212;
+    --color-primary: #0ef;
+    --color-secondary: #0ff;
+    --color-accent: #f0a500;
+    --color-text: #eee;
+    --color-winner: #4caf50;
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-family);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    min-height: 100vh;
+    user-select: none;
+  }
+  h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 0.25rem;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  h2 {
+    font-weight: 400;
+    margin: 0 0 1.5rem 0;
+    color: var(--color-primary);
+  }
+  #mode-select {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 1rem;
+  }
+  #mode-select label {
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0.3rem 0.7rem;
+    border: 2px solid var(--color-primary);
+    border-radius: 6px;
+    user-select: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  #mode-select input[type="radio"] {
+    display: none;
+  }
+  #mode-select input[type="radio"]:checked + label {
+    background-color: var(--color-primary);
+    color: var(--color-bg);
+  }
+  #board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+  .cell {
+    background-color: #222;
+    border-radius: 12px;
+    box-shadow:
+      inset 2px 2px 6px #1a1a1a,
+      inset -2px -2px 6px #2a2a2a;
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--color-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .cell.x {
+    color: #29b6f6;
+  }
+  .cell.o {
+    color: #f48fb1;
+  }
+  .cell.winner {
+    background-color: var(--color-winner);
+    color: var(--color-bg);
+    box-shadow: 0 0 20px var(--color-winner);
+  }
+  #message {
+    font-size: 1.3rem;
+    min-height: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  #reset-btn {
+    background-color: var(--color-accent);
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--color-bg);
+    cursor: pointer;
+    box-shadow: 0 4px 8px -2px var(--color-accent);
+    transition: background-color 0.3s ease;
+  }
+  #reset-btn:hover {
+    background-color: #e59400;
+    box-shadow: 0 6px 12px -2px #e59400;
+  }
+  @media (max-width: 400px) {
+    #board {
+      grid-template-columns: repeat(3, 80px);
+      grid-template-rows: repeat(3, 80px);
+      gap: 10px;
+    }
+    .cell {
+      font-size: 3rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <h1>Tic Tac Toe</h1>
+  <h2>Play against another player or the computer</h2>
+
+  <div id="mode-select" role="radiogroup" aria-label="Select game mode">
+    <input type="radio" id="mode-pvp" name="game-mode" value="pvp" checked="">
+    <label for="mode-pvp" tabindex="0">Player vs Player</label>
+
+    <input type="radio" id="mode-pvc" name="game-mode" value="pvc">
+    <label for="mode-pvc" tabindex="0">Player vs Computer</label>
+  </div>
+
+  <div id="board" role="grid" aria-label="Tic Tac Toe board" aria-live="polite" aria-relevant="all">
+    <div class="cell x" role="gridcell" tabindex="0" data-index="0" style="cursor: default;">X</div>
+    <div class="cell o" role="gridcell" tabindex="0" data-index="1" style="cursor: default;">O</div>
+    <div class="cell x" role="gridcell" tabindex="0" data-index="2" style="cursor: default;">X</div>
+    <div class="cell x" role="gridcell" tabindex="0" data-index="3" style="cursor: default;">X</div>
+    <div class="cell o" role="gridcell" tabindex="0" data-index="4" style="cursor: default;">O</div>
+    <div class="cell o" role="gridcell" tabindex="0" data-index="5" style="cursor: default;">O</div>
+    <div class="cell o" role="gridcell" tabindex="0" data-index="6" style="cursor: default;">O</div>
+    <div class="cell x" role="gridcell" tabindex="0" data-index="7" style="cursor: default;">X</div>
+    <div class="cell x" role="gridcell" tabindex="0" data-index="8" style="cursor: default;">X</div>
+  </div>
+
+  <div id="message" aria-live="assertive" aria-atomic="true">It's a draw! 🤝</div>
+  <button id="reset-btn" aria-label="Reset game">New Game</button>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const boardEl = document.getElementById('board');
+    const cells = Array.from(boardEl.querySelectorAll('.cell'));
+    const messageEl = document.getElementById('message');
+    const resetBtn = document.getElementById('reset-btn');
+    const modeRadios = document.querySelectorAll('input[name="game-mode"]');
+
+    let board = new Array(9).fill('');
+    let currentPlayer = 'X';
+    let gameOver = false;
+    let vsComputer = false;
+
+    const winningCombos = [
+      [0,1,2], [3,4,5], [6,7,8], // rows
+      [0,3,6], [1,4,7], [2,5,8], // cols
+      [0,4,8], [2,4,6]           // diagonals
+    ];
+
+    function isWin(player) {
+      return winningCombos.some(combo => combo.every(i => board[i] === player));
+    }
+
+    function getWinningCombo(player) {
+      return winningCombos.find(combo => combo.every(i => board[i] === player));
+    }
+
+    function isDraw() {
+      return board.every(cell => cell !== '');
+    }
+
+    function updateCell(index, player) {
+      board[index] = player;
+      const cell = cells[index];
+      cell.textContent = player;
+      cell.classList.add(player.toLowerCase());
+      cell.classList.remove('winner');
+      cell.style.cursor = 'default';
+    }
+
+    function highlightWin(combo) {
+      if (!combo) return;
+      combo.forEach(i => cells[i].classList.add('winner'));
+    }
+
+    function disableBoard() {
+      cells.forEach(c => c.style.cursor = 'default');
+    }
+
+    function switchPlayer() {
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    }
+
+    function computerPlay() {
+      if (gameOver) return;
+
+      // 1. Win if possible
+      for (let i=0; i<9; i++) {
+        if (board[i] === '') {
+          board[i] = 'O';
+          if (isWin('O')) {
+            updateCell(i, 'O');
+            endTurn('O');
+            return;
+          }
+          board[i] = '';
+        }
+      }
+      // 2. Block player win
+      for (let i=0; i<9; i++) {
+        if (board[i] === '') {
+          board[i] = 'X';
+          if (isWin('X')) {
+            board[i] = 'O';
+            updateCell(i, 'O');
+            endTurn('O');
+            return;
+          }
+          board[i] = '';
+        }
+      }
+      // 3. Else random
+      const empties = board.map((v,i) => v === '' ? i : null).filter(i => i !== null);
+      if (empties.length === 0) return;
+      const choice = empties[Math.floor(Math.random()*empties.length)];
+      updateCell(choice, 'O');
+      endTurn('O');
+    }
+
+    function endTurn(player) {
+      if (isWin(player)) {
+        gameOver = true;
+        highlightWin(getWinningCombo(player));
+        messageEl.textContent = (player === 'O' && vsComputer)
+          ? 'Computer wins! 🎉'
+          : `Player ${player} wins! 🎉`;
+        disableBoard();
+        return;
+      }
+      if (isDraw()) {
+        gameOver = true;
+        messageEl.textContent = "It's a draw! 🤝";
+        disableBoard();
+        return;
+      }
+      switchPlayer();
+
+      if (vsComputer) {
+        if (currentPlayer === 'O') {
+          messageEl.textContent = "Computer's turn (O)";
+          setTimeout(computerPlay, 600);
+        } else {
+          messageEl.textContent = "Your turn (X)";
+        }
+      } else {
+        messageEl.textContent = `Player ${currentPlayer}'s turn`;
+      }
+    }
+
+    function cellClicked(e) {
+      if (gameOver) return;
+      const cell = e.target;
+      const idx = parseInt(cell.getAttribute('data-index'), 10);
+      if (board[idx] !== '') return;
+      if (vsComputer && currentPlayer === 'O') return;
+
+      updateCell(idx, currentPlayer);
+      endTurn(currentPlayer);
+    }
+
+    function reset() {
+      board.fill('');
+      gameOver = false;
+      currentPlayer = 'X';
+      cells.forEach(c => {
+        c.textContent = '';
+        c.classList.remove('x','o','winner');
+        c.style.cursor = 'pointer';
+      });
+      messageEl.textContent = vsComputer ? "Your turn (X)" : "Player X's turn";
+    }
+
+    function modeChanged() {
+      vsComputer = Array.from(modeRadios).find(r => r.checked).value === 'pvc';
+      reset();
+    }
+
+    cells.forEach(cell => {
+      cell.addEventListener('click', cellClicked);
+      cell.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          cellClicked(e);
+        }
+      });
+    });
+
+    resetBtn.addEventListener('click', reset);
+    modeRadios.forEach(radio => radio.addEventListener('change', modeChanged));
+
+    // Initialize game when DOM ready
+    modeChanged();
+  });
+</script>
+
+</body></html>
